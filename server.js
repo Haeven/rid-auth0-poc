@@ -1,6 +1,6 @@
 const dotenv = require("dotenv");
 const express = require("express");
-const https = require("https");
+const http = require("http");
 const logger = require("morgan");
 const path = require("path");
 const router = require("./routes/index");
@@ -22,7 +22,7 @@ const config = {
   auth0Logout: true,
 };
 
-config.baseURL = `https://rid-auth0-poc.herokuapp.com`;
+// config.baseURL = `https://rid-auth0-poc.herokuapp.com`;
 
 app.use(auth(config));
 
@@ -64,21 +64,16 @@ app.use(function (err, req, res, next) {
     error: err
   });
 });
-const fs = require("fs");
+// const fs = require("fs");
 
-const privateKey = fs.readFileSync("certs/server.key", "utf8");
-const certificate = fs.readFileSync("certs/server.crt", "utf8");
+// const privateKey = fs.readFileSync("certs/server.key", "utf8");
+// const certificate = fs.readFileSync("certs/server.crt", "utf8");
 
-const credentials = {
-  key: privateKey,
-  cert: certificate,
-};
+// const credentials = {
+//   key: privateKey,
+//   cert: certificate,
+// };
 
-const server = https.createServer(credentials, app).listen(process.env.PORT, () => {
-  console.log(`Listening on ${config.baseURL}`);
-});
-
-server.on('clientError', (err, socket) => {
-  console.error(err);
-  socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+app.listen(process.env.PORT, () => {
+  console.log('Listening');
 });
