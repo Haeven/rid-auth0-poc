@@ -22,7 +22,7 @@ const config = {
   auth0Logout: true,
 };
 
-config.baseURL = `https://rbauction.local:8443`;
+config.baseURL = `https://rid-auth0-poc.herokuapp.com/`;
 
 app.use(auth(config));
 
@@ -74,6 +74,6 @@ const credentials = {
   cert: certificate,
 };
 
-https.createServer(credentials, app).listen(8443, () => {
+https.createServer(credentials, app).listen(process.env.PORT, () => {
   console.log(`Listening on ${config.baseURL}`);
 });
