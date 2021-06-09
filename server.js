@@ -74,6 +74,6 @@ const credentials = {
   cert: certificate,
 };
 
-https.createServer(credentials, app).listen(port, () => {
+https.createServer(credentials, app).listen(8443, () => {
   console.log(`Listening on ${config.baseURL}`);
 });
