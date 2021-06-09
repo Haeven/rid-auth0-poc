@@ -1,6 +1,5 @@
 const dotenv = require("dotenv");
 const express = require("express");
-const app = express();
 const https = require("https");
 const logger = require("morgan");
 const path = require("path");
