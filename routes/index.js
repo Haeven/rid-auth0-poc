@@ -6,6 +6,7 @@ router.get('/', function (req, res, next) {
     title: 'Auth0 Webapp sample Nodejs',
     isAuthenticated: req.oidc.isAuthenticated()
   });
+	res.status(200);
 });
 
 // router.get('/logins', function (req, res, next) {
