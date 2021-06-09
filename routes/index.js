@@ -7,6 +7,7 @@ router.get('/', function (req, res, next) {
     isAuthenticated: req.oidc.isAuthenticated()
   });
 	res.status(200);
+	res.end();
 });
 
 // router.get('/logins', function (req, res, next) {
