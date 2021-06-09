@@ -74,11 +74,11 @@ const credentials = {
   cert: certificate,
 };
 
-https.createServer(credentials, app).listen(process.env.PORT, () => {
+const server = https.createServer(credentials, app).listen(process.env.PORT, () => {
   console.log(`Listening on ${config.baseURL}`);
 });
 
-https.on('clientError', (err, socket) => {
+server.on('clientError', (err, socket) => {
   console.error(err);
   socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
