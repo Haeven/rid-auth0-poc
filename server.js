@@ -22,7 +22,7 @@ const config = {
   auth0Logout: true,
 };
 
-config.baseURL = `https://rid-auth0-poc.herokuapp.com/`;
+config.baseURL = `https://rid-auth0-poc.herokuapp.com`;
 
 app.use(auth(config));
 
