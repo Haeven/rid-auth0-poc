@@ -4,7 +4,7 @@ const { requiresAuth } = require('express-openid-connect');
 router.get('/', function (req, res, next) {
   res.render('index', {
     title: 'Auth0 Webapp sample Nodejs',
-    isAuthenticated: req.oidc.isAuthenticated()
+    isAuthenticated: false
   });
 	res.status(200);
 	res.end();
