@@ -29,6 +29,7 @@ router.get('/', function (req, res, next) {
 // });
 
 router.get('/profile', function (req, res, next) {
+	console.log(req); /* eslint-disable-line */
   res.render('profile', {
     userProfile: JSON.stringify(req.oidc.user, null, 2),
     title: 'Profile page'
