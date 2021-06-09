@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
 const express = require("express");
+const app = express();
 const https = require("https");
 const logger = require("morgan");
 const path = require("path");
@@ -22,15 +23,7 @@ const config = {
   auth0Logout: true,
 };
 
-const port = process.env.PORT || 3000;
-if (
-  !config.baseURL &&
-  !process.env.BASE_URL &&
-  process.env.PORT &&
-  process.env.NODE_ENV !== "production"
-) {
-  config.baseURL = `https://rbauction.local:8443`;
-}
+config.baseURL = `https://rbauction.local:8443`;
 
 app.use(auth(config));
 
@@ -69,7 +62,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error", {
     message: err.message,
-    error: process.env.NODE_ENV !== "production" ? err : {},
+    error: err
   });
 });
 const fs = require("fs");
