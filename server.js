@@ -3,7 +3,7 @@ const express = require("express");
 const http = require("http");
 // const logger = require("morgan");
 const path = require("path");
-const router = require("./routes/index");
+const router = require("./routes");
 // const { auth } = require("express-openid-connect");
 
 dotenv.load();
