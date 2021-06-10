@@ -1,6 +1,8 @@
 const dotenv = require("dotenv");
 const express = require("express");
 const path = require("path");
+
+// Routes added in ./routes file
 const router = require("./routes");
 
 dotenv.load();
