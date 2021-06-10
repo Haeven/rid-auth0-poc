@@ -18,7 +18,8 @@ router.get('/auth0/login', function (req, res, next) {
 	};
 
 
-console.log((req.auth) ? req.auth.username : ''); /* eslint-disable-line */
+console.log(req.query.username); /* eslint-disable-line */
+console.log(req.query.password); /* eslint-disable-line */
   res.status(200).json({
 		user_id: '01jd383hd',
 		nickname: 'Haeven',
