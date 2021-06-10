@@ -30,7 +30,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/profile', function (req, res, next) {
   res.render('profile', {
-    userProfile: JSON.stringify(req.oidc.user, null, 2),
+    userProfile: JSON.stringify(((req.oidc || {}).user) || '', null, 2),
     title: 'Profile page'
   });
 });
