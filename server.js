@@ -1,6 +1,5 @@
 const dotenv = require("dotenv");
 const express = require("express");
-const http = require("http");
 const path = require("path");
 const router = require("./routes");
 
