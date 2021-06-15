@@ -19,7 +19,7 @@ const Database = new database();
 */
 router.get('/auth0/login', function (req, res, next) {
 	try {
-		// if (validateParams(req, res)) return res.status(400).json({ error: `Missing parameters for ${req.path}` });
+		// if (validateParams(req, res)) return res.json({ error: `Missing parameters for ${req.path}` });
 		const userProfile = Database.loginUser(req.query.userNameOrEmail, req.query.password);
 
 		return res.status(200).json({
@@ -28,7 +28,7 @@ router.get('/auth0/login', function (req, res, next) {
 			error: false
 		});
 	} catch(error) {
-		return res.status(400).json({ error });
+		return res.json({ error });
 	}
 });
 
@@ -51,7 +51,7 @@ router.get('/auth0/create', function (req, res, next) {
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.status(400).json({ error });
+		return res.json({ error });
 	}
 });
 
@@ -69,7 +69,7 @@ router.get('/auth0/verify', function (req, res, next) {
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.status(400).json({ error });
+		return res.json({ error });
 	}
 });
 
@@ -88,7 +88,7 @@ router.get('/auth0/changePassword', function (req, res, next) {
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.status(400).json({ error });
+		return res.json({ error });
 	}
 });
 
@@ -110,7 +110,7 @@ router.get('/auth0/getUser', function (req, res, next) {
 			error: false
 		});
 	} catch(error) {
-		return res.status(400).json({ error });
+		return res.json({ error });
 	}
 });
 
@@ -128,7 +128,7 @@ router.get('/auth0/delete', function (req, res, next) {
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.status(400).json({ error });
+		return res.json({ error });
 	}
 });
 
