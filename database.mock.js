@@ -41,7 +41,13 @@ class DatabaseMock {
 	loginUser(email, passwordAttempt) {
 		const userProfile = this.users.find(i => i.email == email);
 
-		if (userProfile && bcrypt.compareSync(userProfile.password, passwordAttempt)) {
+		if (
+			userProfile
+			&& (
+				userProfile.password == passwordAttempt
+				|| bcrypt.compareSync(userProfile.password, passwordAttempt)
+			)
+		) {
 			return userProfile;
 		} else {
 			throw new Error('invalid_credentials');
@@ -49,7 +55,10 @@ class DatabaseMock {
 	}
 
 	createUser(user) {
-		const userFound = this.users.some(i => i.email == user.username);
+		const userFound = this.users.some(i =>
+			i.email == user.email
+			|| i.username == user.username
+		);
 
 		if (!userFound) {
 			this.users.push(user);

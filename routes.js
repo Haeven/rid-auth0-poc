@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const DatabaseMock = require('./database.mock');
 const Database = new DatabaseMock();
-
+const { v4: uuidv4 } = require('uuid');
 
 /*
 	------------------------------------------------------
@@ -44,7 +44,17 @@ router.get('/auth0/login', function (req, res, next) {
 */
 router.get('/auth0/create', function (req, res, next) {
 	try {
-		const user = { username: req.query.username, password: req.query.password }
+		const user = {
+			username: req.query.username || '',
+			password: req.query.password,
+			email: req.query.email || '',
+			tenant: req.query.tenant || '',
+			connection: req.query.connection || '',
+			client_id: req.query.client_id || '',
+			email_verified: false,
+			id: uuidv4()
+		};
+
 		Database.createUser(user);
 
 		return res.status(200).json({ user, error: false });
