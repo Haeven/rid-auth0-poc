@@ -47,7 +47,7 @@ router.get('/auth0/create', function (req, res, next) {
 		const user = { username: req.query.username, password: req.query.password }
 		Database.createUser(user);
 
-		return res.status(200).json({ error: false });
+		return res.status(200).json({ user, error: false });
 	} catch(error) {
 		return res.status(200).json({ error });
 	}
