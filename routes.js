@@ -19,7 +19,7 @@ const Database = new database();
 */
 router.get('/auth0/login', function (req, res, next) {
 	try {
-		validateParams(req, res);
+		// if (validateParams(req, res)) return res.status(400).json({ error: `Missing parameters for ${req.path}` });
 		const userProfile = Database.loginUser(req.query.userNameOrEmail, req.query.password);
 
 		return res.status(200).json({
@@ -28,7 +28,7 @@ router.get('/auth0/login', function (req, res, next) {
 			error: false
 		});
 	} catch(error) {
-		return res.send(error).status(500);
+		return res.status(400).json({ error });
 	}
 });
 
@@ -45,13 +45,13 @@ router.get('/auth0/login', function (req, res, next) {
 */
 router.get('/auth0/create', function (req, res, next) {
 	try {
-		validateParams(req, res);
+		// validateParams(req, res);
 		const user = { username: req.query.username, password: req.query.password }
 		Database.createUser(user);
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.json({ error: error.message }).status(500);
+		return res.status(400).json({ error });
 	}
 });
 
@@ -64,12 +64,12 @@ router.get('/auth0/create', function (req, res, next) {
 */
 router.get('/auth0/verify', function (req, res, next) {
 	try {
-		validateParams(req, res);
+		// validateParams(req, res);
 		Database.verifyUser(req.query.email);
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.json({ error: error.message }).status(500);
+		return res.status(400).json({ error });
 	}
 });
 
@@ -83,12 +83,12 @@ router.get('/auth0/verify', function (req, res, next) {
 */
 router.get('/auth0/changePassword', function (req, res, next) {
 	try {
-		validateParams(req, res);
+		// validateParams(req, res);
 		Database.changePassword(req.query.email, req.query.password);
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.json({ error: error.message }).status(500);
+		return res.status(400).json({ error });
 	}
 });
 
@@ -101,7 +101,7 @@ router.get('/auth0/changePassword', function (req, res, next) {
 */
 router.get('/auth0/getUser', function (req, res, next) {
 	try {
-		validateParams(req, res);
+		// validateParams(req, res);
 		const userProfile = Database.getUser(email);
 
 		return res.status(200).json({
@@ -110,7 +110,7 @@ router.get('/auth0/getUser', function (req, res, next) {
 			error: false
 		});
 	} catch(error) {
-		return res.json({ error: error.message }).status(500);
+		return res.status(400).json({ error });
 	}
 });
 
@@ -123,12 +123,12 @@ router.get('/auth0/getUser', function (req, res, next) {
 */
 router.get('/auth0/delete', function (req, res, next) {
 	try {
-		validateParams(req, res);
+		// validateParams(req, res);
 		Database.deleteUser(req.query.id);
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.json({ error: error.message }).status(500);
+		return res.status(400).json({ error });
 	}
 });
 
@@ -157,8 +157,8 @@ const requiredParamsDictionary = {
 function validateParams(req, res) {
 	const requiredParams = requiredParamsDictionary[req.path.replace('/auth0/', '')];
 
-	if (requiredParams.every(i => i in req.query)) return;
-	else res.json({ error: `Missing parameters for ${req.path}` }).status(500);
+	if (requiredParams.every(i => i in req.query)) return true;
+	else return false;
 }
 
 module.exports = router;
