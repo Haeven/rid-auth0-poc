@@ -1,4 +1,6 @@
 const bcrypt = require('bcrypt');
+const CryptoJS = require("crypto-js");
+
 /*
 	Database mock that mimics the functionality of any integrating database:
 
@@ -53,8 +55,10 @@ class Database {
 
 	loginUser(email, passwordAttempt) {
 		const userProfile = users.find(i => i.email == email);
+		const bytes  = CryptoJS.AES.decrypt(passwordAttempt, 'secret key 123');
+		const password = bytes.toString(CryptoJS.enc.Utf8);
 
-		if (userProfile && bcrypt.compareSync(passwordAttempt, userProfile.password)) {
+		if (userProfile && bcrypt.compareSync(password, userProfile.password)) {
 			return userProfile;
 		} else {
 			throw new Error('Incorrect email or password');
