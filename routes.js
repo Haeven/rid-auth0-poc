@@ -25,7 +25,7 @@ const paramsDictionary = {
 	* @errorReturns {JSON} - Object containing populated "error" message
 	* @successReturns - {Profile Object} - https://auth0.com/docs/users/normalized-user-profile-schema
 */
-router.get('/auth0/login', validateParams, function (req, res, next) {
+router.get('/auth0/login', function (req, res, next) {
 	try {
 		const userProfile = Database.loginUser(req.query.username, req.query.password);
 
