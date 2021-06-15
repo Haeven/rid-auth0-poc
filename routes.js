@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const e = require('express');
 const database = require('./database.mock');
 const Database = new database();
 
@@ -27,8 +28,8 @@ router.get('/auth0/login', function (req, res, next) {
 			user_id: userProfile.id,
 			error: false
 		});
-	} catch(error) {
-		return res.status(200).json({ error });
+	} catch(e) {
+		return res.status(200).json({ error: e.message });
 	}
 });
 

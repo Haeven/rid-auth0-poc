@@ -57,7 +57,7 @@ class Database {
 		if (userProfile && bcrypt.compareSync(passwordAttempt, userProfile.password)) {
 			return userProfile;
 		} else {
-			throw new WrongUsernameOrPasswordError(email, 'Incorrect email or password');
+			throw new Error('Incorrect email or password');
 		}
 	}
 
@@ -65,7 +65,7 @@ class Database {
 		const userFound = users.some(i => i.email == user.username);
 
 		if (userFound) return null;
-		else throw new ValidationError('user_exists', 'Username unavailable');
+		else throw new Error('Username unavailable');
 	}
 
 	verifyUser(email) {
