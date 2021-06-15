@@ -27,7 +27,7 @@ const paramsDictionary = {
 */
 router.get('/auth0/login', function (req, res, next) {
 	try {
-		validateParams();
+		validateParams(req, res);
 		const userProfile = Database.loginUser(req.query.username, req.query.password);
 
 		return res.status(200).json({
@@ -53,7 +53,7 @@ router.get('/auth0/login', function (req, res, next) {
 */
 router.get('/auth0/create', function (req, res, next) {
 	try {
-		validateParams();
+		validateParams(req, res);
 		const user = { username: req.query.username, password: req.query.password }
 		const userFound = Database.createUser(user);
 
@@ -76,7 +76,7 @@ router.get('/auth0/create', function (req, res, next) {
 */
 router.get('/auth0/verify', function (req, res, next) {
 	try {
-		validateParams();
+		validateParams(req, res);
 		Database.verifyUser(req.query.email);
 
 		return res.status(200).json({ error: false });
@@ -95,7 +95,7 @@ router.get('/auth0/verify', function (req, res, next) {
 */
 router.get('/auth0/changePassword', function (req, res, next) {
 	try {
-		validateParams();
+		validateParams(req, res);
 		Database.changePassword(req.query.email, req.query.password);
 
 		return res.status(200).json({ error: false });
@@ -113,7 +113,7 @@ router.get('/auth0/changePassword', function (req, res, next) {
 */
 router.get('/auth0/getUser', function (req, res, next) {
 	try {
-		validateParams();
+		validateParams(req, res);
 		const userProfile = Database.getUser(email);
 
 		return res.status(200).json({
@@ -135,7 +135,7 @@ router.get('/auth0/getUser', function (req, res, next) {
 */
 router.get('/auth0/delete', function (req, res, next) {
 	try {
-		validateParams();
+		validateParams(req, res);
 		Database.deleteUser(req.query.id);
 
 		return res.status(200).json({ error: false });
@@ -157,15 +157,11 @@ router.get('/auth0/delete', function (req, res, next) {
 */
 
 // In our mock database, the username parameter is processed as an email (this will vary between integrating systems)
-function validateParams(req, res, next) {
-	if (req) {
-		const requiredParams = paramsDictionary(req.path.replace('/auth0/', ''));
+function validateParams(req, res) {
+	const requiredParams = paramsDictionary(req.path.replace('/auth0/', ''));
 
-		if (requiredParams.every(i => i in req.query)) next()
-		else return res.status(500).json({ error: `Missing parameters for ${req.path}` });
-	}
-
-	return res.status(500).json({ error: 'Invalid request' });
+	if (requiredParams.every(i => i in req.query)) return;
+	else res.status(500).json({ error: `Missing parameters for ${req.path}` });
 }
 
 module.exports = router;
