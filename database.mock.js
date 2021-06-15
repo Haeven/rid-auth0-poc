@@ -34,10 +34,12 @@ const users = [
 ];
 
 class DatabaseMock {
-	constructor() {}
+	constructor() {
+		this.users = users;
+	}
 
 	loginUser(email, passwordAttempt) {
-		const userProfile = users.find(i => i.email == email);
+		const userProfile = this.users.find(i => i.email == email);
 
 		if (userProfile && bcrypt.compareSync(userProfile.password, passwordAttempt)) {
 			return userProfile;
@@ -47,52 +49,47 @@ class DatabaseMock {
 	}
 
 	createUser(user) {
-		const userFound = users.some(i => i.email == user.username);
+		const userFound = this.users.some(i => i.email == user.username);
 
-		if (!userFound) return user;
-		else throw new Error('user_exists');
+		if (!userFound) {
+			this.users.push(user);
+
+			return user;
+		} else throw new Error('user_exists');
 	}
 
 	verifyUser(email) {
-		const userProfile = users.find(i => i.email == email);
+		const userProfile = this.users.find(i => i.email == email);
 
 		if (userProfile) {
 			userProfile.email_verified = true;
-		} else {
-			throw new Error('user_not_found');
-		}
+		} else throw new Error('user_not_found');
 	}
 
 	changePassword(email, newPassword) {
-		const userProfile = users.find(i => i.email == email);
+		const userProfile = this.users.find(i => i.email == email);
 
 		if (userProfile) {
 			userProfile.password = newPassword;
-		} else {
-			throw new Error('user_not_found');
-		}
+		} else throw new Error('user_not_found');
 
 		return;
 	}
 
 	getUser(email) {
-		const userProfile = users.find(i => i.email == email);
+		const userProfile = this.users.find(i => i.email == email);
 
 		if (userProfile) {
 			return userProfile;
-		} else {
-			throw new Error('user_not_found');
-		}
+		} else throw new Error('user_not_found');
 	}
 
 	deleteUser(id) {
-		const userProfile = users.find(i => i.user_id == id);
+		const userIndex = this.users.findIndex(i => i.user_id == id);
 
-		if (userProfile) {
-			// delete userProfile;
-		} else {
-			throw new Error('user_not_found');
-		}
+		if (userIndex > -1) {
+			this.users.splice(userIndex, 1);
+		} else throw new Error('user_not_found');
 
 		return;
 	}
