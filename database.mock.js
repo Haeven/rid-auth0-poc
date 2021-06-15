@@ -49,7 +49,7 @@ class DatabaseMock {
 	createUser(user) {
 		const userFound = users.some(i => i.email == user.username);
 
-		if (userFound) return null;
+		if (!userFound) return user;
 		else throw new Error('user_exists');
 	}
 
