@@ -42,7 +42,7 @@ class Database {
 		if (userProfile && bcrypt.compareSync(userProfile.password, passwordAttempt)) {
 			return userProfile;
 		} else {
-			throw new Error('Incorrect email or password');
+			throw new Error('Incorrect email or password!');
 		}
 	}
 
@@ -50,7 +50,7 @@ class Database {
 		const userFound = users.some(i => i.email == user.username);
 
 		if (userFound) return null;
-		else throw new Error('Username unavailable');
+		else throw new Error('Username unavailable.');
 	}
 
 	verifyUser(email) {
@@ -59,7 +59,7 @@ class Database {
 		if (userProfile) {
 			userProfile.email_verified = true;
 		} else {
-			throw new Error('User not found');
+			throw new Error('User not found.');
 		}
 	}
 
@@ -69,7 +69,7 @@ class Database {
 		if (userProfile) {
 			userProfile.password = newPassword;
 		} else {
-			throw new Error('User not found');
+			throw new Error('User not found.');
 		}
 
 		return;
@@ -81,7 +81,7 @@ class Database {
 		if (userProfile) {
 			return userProfile;
 		} else {
-			throw new Error('User not found');
+			throw new Error('User not found.');
 		}
 	}
 
@@ -91,7 +91,7 @@ class Database {
 		if (userProfile) {
 			// delete userProfile;
 		} else {
-			throw new Error('User not found');;
+			throw new Error('User not found.');;
 		}
 
 		return;

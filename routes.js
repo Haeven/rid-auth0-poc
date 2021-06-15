@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const e = require('express');
 const database = require('./database.mock');
 const Database = new database();
 
@@ -20,7 +19,6 @@ const Database = new database();
 */
 router.get('/auth0/login', function (req, res, next) {
 	try {
-		// if (validateParams(req, res)) return res.status(200).json({ error: `Missing parameters for ${req.path}` });
 		const userProfile = Database.loginUser(req.query.userNameOrEmail, req.query.password);
 
 		return res.status(200).json({
@@ -46,7 +44,6 @@ router.get('/auth0/login', function (req, res, next) {
 */
 router.get('/auth0/create', function (req, res, next) {
 	try {
-		// validateParams(req, res);
 		const user = { username: req.query.username, password: req.query.password }
 		Database.createUser(user);
 
@@ -65,7 +62,6 @@ router.get('/auth0/create', function (req, res, next) {
 */
 router.get('/auth0/verify', function (req, res, next) {
 	try {
-		// validateParams(req, res);
 		Database.verifyUser(req.query.email);
 
 		return res.status(200).json({ error: false });
@@ -84,7 +80,6 @@ router.get('/auth0/verify', function (req, res, next) {
 */
 router.get('/auth0/changePassword', function (req, res, next) {
 	try {
-		// validateParams(req, res);
 		Database.changePassword(req.query.email, req.query.password);
 
 		return res.status(200).json({ error: false });
@@ -102,8 +97,7 @@ router.get('/auth0/changePassword', function (req, res, next) {
 */
 router.get('/auth0/getUser', function (req, res, next) {
 	try {
-		// validateParams(req, res);
-		const userProfile = Database.getUser(email);
+		const userProfile = Database.getUser(req.query.email);
 
 		return res.status(200).json({
 			email: userProfile.email,
@@ -124,7 +118,6 @@ router.get('/auth0/getUser', function (req, res, next) {
 */
 router.get('/auth0/delete', function (req, res, next) {
 	try {
-		// validateParams(req, res);
 		Database.deleteUser(req.query.id);
 
 		return res.status(200).json({ error: false });
@@ -132,34 +125,5 @@ router.get('/auth0/delete', function (req, res, next) {
 		return res.status(200).json({ error });
 	}
 });
-
-
-/*
-	------------------------------------------------------
-	ROUTE MIDDLEWARE
-	------------------------------------------------------
-*/
-
-const requiredParamsDictionary = {
-	login         : ['userNameOrEmail', 'password'],
-	create        : ['username', 'password'],
-	changePassword: ['email',    'password'],
-	verify        : ['email'],
-	getUser       : ['email'],
-	delete        : ['id']
-};
-
-/*
-	NOTE: A email can be a username (e.g. Valid as a username: test@test.com ✅)
-		— but a username cannot be an email (e.g. Invalid as an email: example_username ❌)
-*/
-
-// In our mock database, the username parameter is processed as an email (this will vary between integrating systems)
-function validateParams(req, res) {
-	const requiredParams = requiredParamsDictionary[req.path.replace('/auth0/', '')];
-
-	if (requiredParams.every(i => i in req.query)) return true;
-	else return false;
-}
 
 module.exports = router;
