@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const database = require('./database.mock');
-const Database = new database();
+const DatabaseMock = require('./database.mock');
+const Database = new DatabaseMock();
 
 
 /*

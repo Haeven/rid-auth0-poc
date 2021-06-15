@@ -33,7 +33,7 @@ const users = [
 	}
 ];
 
-class Database {
+class DatabaseMock {
 	constructor() {}
 
 	loginUser(email, passwordAttempt) {
@@ -42,7 +42,7 @@ class Database {
 		if (userProfile && bcrypt.compareSync(userProfile.password, passwordAttempt)) {
 			return userProfile;
 		} else {
-			throw new Error('Incorrect email or password!');
+			throw new Error('invalid_credentials');
 		}
 	}
 
@@ -50,7 +50,7 @@ class Database {
 		const userFound = users.some(i => i.email == user.username);
 
 		if (userFound) return null;
-		else throw new Error('Username unavailable.');
+		else throw new Error('user_exists');
 	}
 
 	verifyUser(email) {
@@ -59,7 +59,7 @@ class Database {
 		if (userProfile) {
 			userProfile.email_verified = true;
 		} else {
-			throw new Error('User not found.');
+			throw new Error('user_not_found');
 		}
 	}
 
@@ -69,7 +69,7 @@ class Database {
 		if (userProfile) {
 			userProfile.password = newPassword;
 		} else {
-			throw new Error('User not found.');
+			throw new Error('user_not_found');
 		}
 
 		return;
@@ -81,7 +81,7 @@ class Database {
 		if (userProfile) {
 			return userProfile;
 		} else {
-			throw new Error('User not found.');
+			throw new Error('user_not_found');
 		}
 	}
 
@@ -91,11 +91,11 @@ class Database {
 		if (userProfile) {
 			// delete userProfile;
 		} else {
-			throw new Error('User not found.');;
+			throw new Error('user_not_found');
 		}
 
 		return;
 	}
 }
 
-module.exports = Database;
+module.exports = DatabaseMock;
