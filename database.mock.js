@@ -1,14 +1,13 @@
+const bcrypt = require('bcrypt');
 /*
 	Database mock that mimics the functionality of any integrating database:
 
-	Code used to generate passwords:
-		const bcrypt = require('bcrypt');
+	Code used to generate the passwords originally:
 		const saltRounds = 10;
-		bcrypt.hashSync("USER_PASSWORD", saltRounds);
+		bcrypt.hashSync(USER_PASSWORD, saltRounds);
 
 	Code used to compare passwords:
-		const bcrypt = require('bcrypt');
-		bcrypt.compareSync('password1', '$2b$10$u.TACZdF/vlrSnsEVaj4e.3spwpRJ7GmJgPpqUGNtIwTr1RXEe37W')
+		bcrypt.compareSync(PASSWORD_ATTEMPT, '$2b$10$u.TACZdF/vlrSnsEVaj4e.3spwpRJ7GmJgPpqUGNtIwTr1RXEe37W')
 */
 
 const users = [
@@ -52,12 +51,12 @@ const users = [
 class Database {
 	constructor() {}
 
-	userExists(email) {
+	loginUser(email, passwordAttempt) {
 		const userProfile = users.find(i => {
 			return (i.email == email);
 		});
 
-		if (userProfile) {
+		if (userProfile && bcrypt.compareSync(passwordAttempt, userProfile.password)) {
 			return userProfile;
 		} else {
 			throw new Error('User not found')
@@ -91,6 +90,18 @@ class Database {
 
 		if (userProfile) {
 			userProfile.password = newPassword;
+		} else {
+			throw new Error('User not found')
+		}
+	}
+
+	getUser(email) {
+		const userProfile = users.find(i => {
+			return (i.email == email);
+		});
+
+		if (userProfile) {
+			return userProfile;
 		} else {
 			throw new Error('User not found')
 		}

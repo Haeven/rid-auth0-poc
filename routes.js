@@ -27,7 +27,7 @@ const paramsDictionary = {
 */
 router.get('/auth0/login', validateParams, function (req, res, next) {
 	try {
-		const userProfile = Database.userExists(req.query.username);
+		const userProfile = Database.loginUser(req.query.username, req.query.password);
 
 		return res.status(200).json({
 			email: userProfile.email,
@@ -105,13 +105,17 @@ router.get('/auth0/changePassword', validateParams, function (req, res, next) {
 	* @route {GET} /auth0/getUser - This endpoint will be called to test if the user exists when the user changes their password.
 	* @param {Query String} email
 	* @errorReturns {JSON} - Object containing populated "error" message
-	* @successReturns - {JSON} - Object containing error: false
+	* @successReturns - {Profile Object} - https://auth0.com/docs/users/normalized-user-profile-schema
 */
 router.get('/auth0/getUser', validateParams, function (req, res, next) {
 	try {
-		Database.getUser(req.query.email);
+		const userProfile = Database.getUser(email);
 
-		return res.status(200).json({ error: false });
+		return res.status(200).json({
+			email: userProfile.email,
+			user_id: userProfile.id,
+			error: false
+		});
 	} catch(error) {
 		return res.status(500).json({ error: error.message });
 	}
