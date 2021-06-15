@@ -25,8 +25,9 @@ const paramsDictionary = {
 	* @errorReturns {JSON} - Object containing populated "error" message
 	* @successReturns - {Profile Object} - https://auth0.com/docs/users/normalized-user-profile-schema
 */
-router.get('/auth0/login', validateParams(req, res, next), function (req, res, next) {
+router.get('/auth0/login', function (req, res, next) {
 	try {
+		validateParams();
 		const userProfile = Database.loginUser(req.query.username, req.query.password);
 
 		return res.status(200).json({
@@ -50,8 +51,9 @@ router.get('/auth0/login', validateParams(req, res, next), function (req, res, n
 	* @errorReturns {JSON} - Object containing populated "error" message
 	* @successReturns - {User Object} - https://auth0.com/docs/connections/database/custom-db/templates/create#user-object-example
 */
-router.get('/auth0/create', validateParams(req, res, next), function (req, res, next) {
+router.get('/auth0/create', function (req, res, next) {
 	try {
+		validateParams();
 		const user = { username: req.query.username, password: req.query.password }
 		const userFound = Database.createUser(user);
 
@@ -72,8 +74,9 @@ router.get('/auth0/create', validateParams(req, res, next), function (req, res, 
 	* @errorReturns {JSON} - Object containing populated "error" message
 	* @successReturns - {JSON} - Object containing error: false
 */
-router.get('/auth0/verify', validateParams(req, res, next), function (req, res, next) {
+router.get('/auth0/verify', function (req, res, next) {
 	try {
+		validateParams();
 		Database.verifyUser(req.query.email);
 
 		return res.status(200).json({ error: false });
@@ -90,8 +93,9 @@ router.get('/auth0/verify', validateParams(req, res, next), function (req, res, 
 	* @errorReturns {JSON} - Object containing populated "error" message
 	* @successReturns - {JSON} - Object containing error: false
 */
-router.get('/auth0/changePassword', validateParams(req, res, next), function (req, res, next) {
+router.get('/auth0/changePassword', function (req, res, next) {
 	try {
+		validateParams();
 		Database.changePassword(req.query.email, req.query.password);
 
 		return res.status(200).json({ error: false });
@@ -107,8 +111,9 @@ router.get('/auth0/changePassword', validateParams(req, res, next), function (re
 	* @errorReturns {JSON} - Object containing populated "error" message
 	* @successReturns - {Profile Object} - https://auth0.com/docs/users/normalized-user-profile-schema
 */
-router.get('/auth0/getUser', validateParams(req, res, next), function (req, res, next) {
+router.get('/auth0/getUser', function (req, res, next) {
 	try {
+		validateParams();
 		const userProfile = Database.getUser(email);
 
 		return res.status(200).json({
@@ -128,8 +133,9 @@ router.get('/auth0/getUser', validateParams(req, res, next), function (req, res,
 	* @errorReturns {Error} - Object containing populated "error" message
 	* @successReturns - {JSON} - Object containing error: false
 */
-router.get('/auth0/delete', validateParams(req, res, next), function (req, res, next) {
+router.get('/auth0/delete', function (req, res, next) {
 	try {
+		validateParams();
 		Database.deleteUser(req.query.id);
 
 		return res.status(200).json({ error: false });
