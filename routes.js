@@ -152,17 +152,14 @@ router.get('/auth0/delete', validateParams, function (req, res, next) {
 
 // In our mock database, the username parameter is processed as an email (this will vary between integrating systems)
 function validateParams(req, res, next) {
-	console.log(req.path);
-	console.log(JSON.stringify(req.query));
-	next();
-	// if (req) {
-	// 	const requiredParams = paramsDictionary(req.path.replace('/auth0/'));
+	if (req) {
+		const requiredParams = paramsDictionary(req.path.replace('/auth0/', ''));
 
-	// 	if (requiredParams.every(i => i in req.query)) next()
-	// 	else return res.status(500).json({ error: `Missing parameters for ${req.path}` });
-	// }
+		if (requiredParams.every(i => i in req.query)) next()
+		else return res.status(500).json({ error: `Missing parameters for ${req.path}` });
+	}
 
-	// return res.status(500).json({ error: 'Invalid request' });
+	return res.status(500).json({ error: 'Invalid request' });
 }
 
 module.exports = router;
