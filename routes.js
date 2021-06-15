@@ -28,7 +28,7 @@ router.get('/auth0/login', function (req, res, next) {
 			error: false
 		});
 	} catch(error) {
-		return res.status(500).json({ error: error.message });
+		return res.status(500).send(error);
 	}
 });
 
