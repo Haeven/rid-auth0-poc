@@ -52,9 +52,7 @@ class Database {
 	constructor() {}
 
 	loginUser(email, passwordAttempt) {
-		const userProfile = users.find(i => {
-			return (i.email == email);
-		});
+		const userProfile = users.find(i => i.email == email);
 
 		if (userProfile && bcrypt.compareSync(passwordAttempt, userProfile.password)) {
 			return userProfile;
@@ -64,17 +62,13 @@ class Database {
 	}
 
 	createUser(user) {
-		const userFound = users.some(i => {
-			return (i.email == user.username);
-		});
+		const userFound = users.some(i => i.email == user.username);
 
 		return userFound;
 	}
 
 	verifyUser(email) {
-		const userProfile = users.find(i => {
-			return (i.email == email);
-		});
+		const userProfile = users.find(i => i.email == email);
 
 		if (userProfile) {
 			userProfile.email_verified = true;
@@ -84,9 +78,7 @@ class Database {
 	}
 
 	changePassword(email, newPassword) {
-		const userProfile = users.find(i => {
-			return i.email == email;
-		});
+		const userProfile = users.find(i => i.email == email);
 
 		if (userProfile) {
 			userProfile.password = newPassword;
@@ -96,9 +88,7 @@ class Database {
 	}
 
 	getUser(email) {
-		const userProfile = users.find(i => {
-			return (i.email == email);
-		});
+		const userProfile = users.find(i => i.email == email);
 
 		if (userProfile) {
 			return userProfile;
@@ -108,9 +98,7 @@ class Database {
 	}
 
 	deleteUser(id) {
-		const userProfile = users.find(i => {
-			return i.user_id == id;
-		});
+		const userProfile = users.find(i => i.user_id == id);
 
 		if (userProfile) {
 			// delete userProfile;
