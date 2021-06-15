@@ -1,14 +1,6 @@
 const router = require('express').Router();
 const database = require('./database.mock');
 const Database = new database();
-const paramsDictionary = {
-	login         : ['username', 'password'],
-	create        : ['username', 'password'],
-	verify        : ['email'],
-	changePassword: ['email', 'password'],
-	getUser       : ['email'],
-	delete        : ['id']
-};
 
 
 /*
@@ -151,6 +143,15 @@ router.get('/auth0/delete', function (req, res, next) {
 	------------------------------------------------------
 */
 
+const requiredParamsDictionary = {
+	login         : ['username', 'password'],
+	create        : ['username', 'password'],
+	changePassword: ['email',    'password'],
+	verify        : ['email'],
+	getUser       : ['email'],
+	delete        : ['id']
+};
+
 /*
 	NOTE: A email can be a username (e.g. Valid as a username: test@test.com ✅)
 		— but a username cannot be an email (e.g. Invalid as an email: example_username ❌)
@@ -158,7 +159,7 @@ router.get('/auth0/delete', function (req, res, next) {
 
 // In our mock database, the username parameter is processed as an email (this will vary between integrating systems)
 function validateParams(req, res) {
-	const requiredParams = paramsDictionary[req.path.replace('/auth0/', '')];
+	const requiredParams = requiredParamsDictionary[req.path.replace('/auth0/', '')];
 
 	if (requiredParams.every(i => i in req.query)) return;
 	else res.status(500).json({ error: `Missing parameters for ${req.path}` });
