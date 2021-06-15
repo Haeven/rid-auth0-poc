@@ -12,7 +12,7 @@ const Database = new database();
 /**
 	* @name Login
 	* @route {GET} /auth0/login - This endpoint will be called each time a user attempts to login.
-	* @param {Query String} username
+	* @param {Query String} userNameOrEmail
 	* @param {Query String} password
 	* @errorReturns {JSON} - Object containing populated "error" message
 	* @successReturns - {Profile Object} - https://auth0.com/docs/users/normalized-user-profile-schema
@@ -20,7 +20,7 @@ const Database = new database();
 router.get('/auth0/login', function (req, res, next) {
 	try {
 		validateParams(req, res);
-		const userProfile = Database.loginUser(req.query.username, req.query.password);
+		const userProfile = Database.loginUser(req.query.userNameOrEmail, req.query.password);
 
 		return res.status(200).json({
 			email: userProfile.email,
@@ -28,7 +28,7 @@ router.get('/auth0/login', function (req, res, next) {
 			error: false
 		});
 	} catch(error) {
-		return res.json({ error: error.message });
+		return res.status(500).json({ error: error.message });
 	}
 });
 
@@ -47,15 +47,11 @@ router.get('/auth0/create', function (req, res, next) {
 	try {
 		validateParams(req, res);
 		const user = { username: req.query.username, password: req.query.password }
-		const userFound = Database.createUser(user);
+		Database.createUser(user);
 
-		if (userFound) {
-			return res.status(200).json({ error: 'User already exists' });
-		} else {
-			return res.status(200).json(null);
-		}
+		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.json({ error: error.message });
+		return res.status(500).json({ error: error.message });
 	}
 });
 
@@ -73,7 +69,7 @@ router.get('/auth0/verify', function (req, res, next) {
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.json({ error: error.message });
+		return res.status(500).json({ error: error.message });
 	}
 });
 
@@ -92,7 +88,7 @@ router.get('/auth0/changePassword', function (req, res, next) {
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.json({ error: error.message });
+		return res.status(500).json({ error: error.message });
 	}
 });
 
@@ -114,7 +110,7 @@ router.get('/auth0/getUser', function (req, res, next) {
 			error: false
 		});
 	} catch(error) {
-		return res.json({ error: error.message });
+		return res.status(500).json({ error: error.message });
 	}
 });
 
@@ -132,7 +128,7 @@ router.get('/auth0/delete', function (req, res, next) {
 
 		return res.status(200).json({ error: false });
 	} catch(error) {
-		return res.json({ error: error.message });
+		return res.status(500).json({ error: error.message });
 	}
 });
 
@@ -144,7 +140,7 @@ router.get('/auth0/delete', function (req, res, next) {
 */
 
 const requiredParamsDictionary = {
-	login         : ['username', 'password'],
+	login         : ['userNameOrEmail', 'password'],
 	create        : ['username', 'password'],
 	changePassword: ['email',    'password'],
 	verify        : ['email'],
@@ -162,7 +158,7 @@ function validateParams(req, res) {
 	const requiredParams = requiredParamsDictionary[req.path.replace('/auth0/', '')];
 
 	if (requiredParams.every(i => i in req.query)) return;
-	else res.json({ error: `Missing parameters for ${req.path}` });
+	else res.status(500).json({ error: `Missing parameters for ${req.path}` });
 }
 
 module.exports = router;
