@@ -1,81 +1,159 @@
-var router = require('express').Router();
-
-const options = {
-	method: 'POST',
-	url: 'https://dev-ivdsn1wz.us.auth0.com/oauth/token',
-	headers: { 'content-type': 'application/json' },
-	body: '{"client_id":"SBZsADpFTJleFDn8CUOeX1rVXJg7zFow","client_secret":"BI-fDkgmKj4QeHP8YV62EnDpoYQBpMHiFMyFCBh7zQjQrr2B-abmrOd6ds_7n3Hr","audience":"https://dev-ivdsn1wz.us.auth0.com/api/v2/","grant_type":"client_credentials"}'
+const router = require('express').Router();
+const database = require('./database.mock');
+const Database = new database();
+const paramsDictionary = {
+	login         : ['username', 'password'],
+	create        : ['username', 'password'],
+	verify        : ['email'],
+	changePassword: ['email', 'password'],
+	getUser       : ['email'],
+	delete        : ['id']
 };
 
+
 /*
+	------------------------------------------------------
 	API ROUTES
+	------------------------------------------------------
 */
-router.get('/auth0/login', function (req, res, next) {
-	// req.query.username
-	// req.query.password
-  res.status(200).json({
-		user_id: '01jd383hd',
-		nickname: 'Haeven',
-		email: 'haeven@gmail.com',
-		error: null
-	});
+
+/**
+	* @name Login
+	* @route {GET} /auth0/login - This endpoint will be called each time a user attempts to login.
+	* @param {Query String} username
+	* @param {Query String} password
+	* @errorReturns {JSON} - Object containing populated "error" message
+	* @successReturns - {Profile Object} - https://auth0.com/docs/users/normalized-user-profile-schema
+*/
+router.get('/auth0/login', validateParams, function (req, res, next) {
+	try {
+		const userProfile = Database.userExists(req.query.username);
+
+		return res.status(200).json({
+			email: userProfile.email,
+			user_id: userProfile.id,
+			error: false
+		});
+	} catch(error) {
+		return res.status(500).json({ error: error.message });
+	}
 });
 
-router.get('/auth0/create', function (req, res, next) {
-	// req.query.username
-	// req.query.password
-	// req.query.tenant
-	// req.query.client_id
-	// req.query.connection
+/**
+	* @name Create
+	* @route {GET} /auth0/create - This endpoint will be called when the user signs up.
+	* @param {Query String} username
+	* @param {Query String} password
+	* @param {Query String} ?tenant
+	* @param {Query String} ?client_id
+	* @param {Query String} ?connection
+	* @errorReturns {JSON} - Object containing populated "error" message
+	* @successReturns - {User Object} - https://auth0.com/docs/connections/database/custom-db/templates/create#user-object-example
+*/
+router.get('/auth0/create', validateParams, function (req, res, next) {
+	try {
+		const user = { username: req.query.username, password: req.query.password }
+		const userFound = Database.createUser(user);
 
-	//Error messages:
-	// user_exists
-  res.status(200).json({
-		user_id: '01jd383hd',
-		nickname: 'Haeven',
-		email: 'haeven@gmail.com',
-		error: null
-	});
+		if (userFound) {
+			return res.status(200).json({ error: 'User already exists' });
+		} else {
+			return res.status(200).json(null);
+		}
+	} catch(error) {
+		return res.status(500).json({ error: error.message });
+	}
 });
 
-router.get('/auth0/verify', function (req, res, next) {
-	// req.query.email
-  res.status(200).json({
-		user_id: '01jd383hd',
-		nickname: 'Haeven',
-		email: 'haeven@gmail.com',
-		error: null
-	});
+/**
+	* @name Verify
+	* @route {GET} /auth0/verify - This endpoint will be called after a user that signed-up follows the "verification" link from their email.
+	* @param {Query String} email
+	* @errorReturns {JSON} - Object containing populated "error" message
+	* @successReturns - {JSON} - Object containing error: false
+*/
+router.get('/auth0/verify', validateParams, function (req, res, next) {
+	try {
+		Database.verifyUser(req.query.email);
+
+		return res.status(200).json({ error: false });
+	} catch(error) {
+		return res.status(500).json({ error: error.message });
+	}
 });
 
-router.get('/auth0/changePassword', function (req, res, next) {
-	// req.query.email
-  res.status(200).json({
-		user_id: '01jd383hd',
-		nickname: 'Haeven',
-		email: 'haeven@gmail.com',
-		error: null
-	});
+/**
+	* @name ChangePassword
+	* @route {GET} /auth0/changePassword - This endpoint will be called when the user changes their password.
+	* @param {Query String} email
+	* @param {Query String} password
+	* @errorReturns {JSON} - Object containing populated "error" message
+	* @successReturns - {JSON} - Object containing error: false
+*/
+router.get('/auth0/changePassword', validateParams, function (req, res, next) {
+	try {
+		Database.changePassword(req.query.email, req.query.password);
+
+		return res.status(200).json({ error: false });
+	} catch(error) {
+		return res.status(500).json({ error: error.message });
+	}
 });
 
-router.get('/auth0/getUser', function (req, res, next) {
-	// req.query.email
-  res.status(200).json({
-		user_id: '01jd383hd',
-		nickname: 'Haeven',
-		email: 'haeven@gmail.com',
-		error: null
-	});
+/**
+	* @name GetUser
+	* @route {GET} /auth0/getUser - This endpoint will be called to test if the user exists when the user changes their password.
+	* @param {Query String} email
+	* @errorReturns {JSON} - Object containing populated "error" message
+	* @successReturns - {JSON} - Object containing error: false
+*/
+router.get('/auth0/getUser', validateParams, function (req, res, next) {
+	try {
+		Database.getUser(req.query.email);
+
+		return res.status(200).json({ error: false });
+	} catch(error) {
+		return res.status(500).json({ error: error.message });
+	}
 });
 
-router.get('/auth0/delete', function (req, res, next) {
-	// req.query.email
-  res.status(200).json({
-		user_id: '01jd383hd',
-		nickname: 'Haeven',
-		email: 'haeven@gmail.com',
-		error: null
-	});
+/**
+	* @name Delete
+	* @route {GET} /auth0/delete - This endpoint will be called when a user is deleted.
+	* @param {Query String} id
+	* @errorReturns {Error} - Object containing populated "error" message
+	* @successReturns - {JSON} - Object containing error: false
+*/
+router.get('/auth0/delete', validateParams, function (req, res, next) {
+	try {
+		Database.deleteUser(req.query.id);
+
+		return res.status(200).json({ error: false });
+	} catch(error) {
+		return res.status(500).json({ error: error.message });
+	}
 });
+
+
+/*
+	------------------------------------------------------
+	ROUTE MIDDLEWARE
+	------------------------------------------------------
+*/
+
+/*
+	NOTE: A email can be a username (e.g. Valid as a username: test@test.com ✅)
+		— but a username cannot be an email (e.g. Invalid as an email: example_username ❌)
+*/
+
+// In our mock database, the username parameter is processed as an email (this will vary between integrating systems)
+function validateParams(req, res, next) {
+	if (req){
+		const requiredParams = paramsDictionary(req.path.replace('/auth0/'));
+
+		if (requiredParams.every(i => i in req.query[i])) next()
+		else return res.status(500).json({ error: `Missing parameters for ${req.path}` });
+	}
+}
 
 module.exports = router;
