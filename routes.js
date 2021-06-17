@@ -24,10 +24,9 @@ router.get('/auth0/login', function (req, res, next) {
 		return res.status(200).send({
 			email: userProfile.email,
 			user_id: userProfile.id,
-
 		}).end();
 	} catch(e) {
-		return res.status(200).send(e.message).end();
+		return res.status(200).send({ error: e.message }).end();
 	}
 });
 
@@ -59,7 +58,7 @@ router.get('/auth0/create', function (req, res, next) {
 
 		return res.status(200).send({ user }).end();
 	} catch(e) {
-		return res.status(200).send(e.message).end();
+		return res.status(200).send({ error: e.message }).end();
 	}
 });
 
@@ -76,7 +75,7 @@ router.get('/auth0/verify', function (req, res, next) {
 
 		return res.status(200).send({ }).end();
 	} catch(e) {
-		return res.status(200).send(e.message).end();
+		return res.status(200).send({ error: e.message }).end();
 	}
 });
 
@@ -94,7 +93,7 @@ router.get('/auth0/changePassword', function (req, res, next) {
 
 		return res.status(200).send({ }).end();
 	} catch(e) {
-		return res.status(200).send(e.message).end();
+		return res.status(200).send({ error: e.message }).end();
 	}
 });
 
@@ -114,7 +113,7 @@ router.get('/auth0/getUser', function (req, res, next) {
 			user_id: userProfile.id
 		}).end();
 	} catch(e) {
-		return res.status(200).send(e.message).end();
+		return res.status(200).send({ error: e.message }).end();
 	}
 });
 
@@ -131,7 +130,7 @@ router.get('/auth0/delete', function (req, res, next) {
 
 		return res.status(200).send({ }).end();
 	} catch(e) {
-		return res.status(200).send(e.message).end();
+		return res.status(200).send({ error: e.message }).end();
 	}
 });
 
