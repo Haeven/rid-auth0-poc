@@ -27,7 +27,7 @@ router.get('/auth0/login', function (req, res, next) {
 
 		}).end();
 	} catch(e) {
-		return res.status(200).send({ error: e.message }).end();
+		return res.status(200).send(e.message).end();
 	}
 });
 
@@ -57,9 +57,9 @@ router.get('/auth0/create', function (req, res, next) {
 
 		Database.createUser(user);
 
-		return res.status(200).send({ user, }).end();
-	} catch(error) {
-		return res.status(200).send({ error }).end();
+		return res.status(200).send({ user }).end();
+	} catch(e) {
+		return res.status(200).send(e.message).end();
 	}
 });
 
@@ -75,8 +75,8 @@ router.get('/auth0/verify', function (req, res, next) {
 		Database.verifyUser(req.query.email);
 
 		return res.status(200).send({ }).end();
-	} catch(error) {
-		return res.status(200).send({ error }).end();
+	} catch(e) {
+		return res.status(200).send(e.message).end();
 	}
 });
 
@@ -93,8 +93,8 @@ router.get('/auth0/changePassword', function (req, res, next) {
 		Database.changePassword(req.query.email, req.query.password);
 
 		return res.status(200).send({ }).end();
-	} catch(error) {
-		return res.status(200).send({ error }).end();
+	} catch(e) {
+		return res.status(200).send(e.message).end();
 	}
 });
 
@@ -113,8 +113,8 @@ router.get('/auth0/getUser', function (req, res, next) {
 			email: userProfile.email,
 			user_id: userProfile.id
 		}).end();
-	} catch(error) {
-		return res.status(200).send({ error }).end();
+	} catch(e) {
+		return res.status(200).send(e.message).end();
 	}
 });
 
@@ -130,8 +130,8 @@ router.get('/auth0/delete', function (req, res, next) {
 		Database.deleteUser(req.query.id);
 
 		return res.status(200).send({ }).end();
-	} catch(error) {
-		return res.status(200).send({ error }).end();
+	} catch(e) {
+		return res.status(200).send(e.message).end();
 	}
 });
 

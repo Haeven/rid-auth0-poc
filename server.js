@@ -2,9 +2,9 @@ const express = require('express');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const routes = require('./routes');
+const port = process.env.PORT || 3000;
 
 const app = express().use('/', routes);
-const port = process.env.PORT || 3000;
 
 const jwtCheck = jwt({
 		secret: jwks.expressJwtSecret({
