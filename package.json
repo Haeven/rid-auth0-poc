@@ -2,11 +2,11 @@
   "name": "example-integrating-database-api",
   "scripts": {},
   "dependencies": {
-    "aws-sdk": "latest",
-    "bcrypt": "latest",
-    "express": "latest",
+    "aws-sdk": "^2.930.0",
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
     "express-jwt": "^6.0.0",
-    "swagger-jsdoc": "latest",
-    "uuid": "latest"
+    "swagger-jsdoc": "^6.1.0",
+    "uuid": "^8.3.2"
   }
 }
