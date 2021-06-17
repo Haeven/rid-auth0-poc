@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 
 const users = [
 	{
-		email: 'abella@example.com',
+		email: 'test@mock.com',
 		id: '3b043439-720b-4ebd-9cac-290015119e9f',
 		password: 'password1',
 		email_verified: false
@@ -11,7 +11,7 @@ const users = [
 		email: 'mia@example.com',
 		id: 'fada8e6c-7a11-4446-b387-d186d62f66d9',
 		password: 'password2',
-		email_verified: false
+		email_verified: true
 	},
 	{
 		email: 'lotte@example.com',
@@ -38,49 +38,45 @@ class DatabaseMock {
 		this.users = users;
 	}
 
-	loginUser(email, passwordAttempt) {
+	loginUser(email, pwdAttempt) {
 		const userProfile = this.users.find(i => i.email == email);
 
-		if (
-			userProfile
-			&& (
-				userProfile.password == passwordAttempt
-				|| bcrypt.compareSync(userProfile.password, passwordAttempt)
-			)
-		) {
-			return userProfile;
+		if (userProfile) {
+			const authenticated = (userProfile.password == pwdAttempt || bcrypt.compareSync(userProfile.password, pwdAttempt));
+
+			if (authenticated) return userProfile;
+			else throw new Error('invalid_credentials');
 		} else {
-			throw new Error('invalid_credentials');
+			throw new Error('user_not_found');
 		}
 	}
 
 	createUser(user) {
-		const userFound = this.users.some(i =>
-			i.email == user.email
-			|| i.username == user.username
-		);
+		const userExists = this.users.some(i => (i.email == user.email) || (i.username == user.username));
 
-		if (!userFound) {
+		if (!userExists) {
 			this.users.push(user);
 
 			return user;
-		} else throw new Error('user_exists');
+		} else {
+			throw new Error('user_exists');
+		}
 	}
 
 	verifyUser(email) {
 		const userProfile = this.users.find(i => i.email == email);
 
-		if (userProfile) {
-			userProfile.email_verified = true;
-		} else throw new Error('user_not_found');
+		if (userProfile) userProfile.email_verified = true;
+		else throw new Error('user_not_found');
+
+		return;
 	}
 
 	changePassword(email, newPassword) {
 		const userProfile = this.users.find(i => i.email == email);
 
-		if (userProfile) {
-			userProfile.password = newPassword;
-		} else throw new Error('user_not_found');
+		if (userProfile) userProfile.password = newPassword;
+		else throw new Error('user_not_found');
 
 		return;
 	}
@@ -88,19 +84,15 @@ class DatabaseMock {
 	getUser(email) {
 		const userProfile = this.users.find(i => i.email == email);
 
-		if (userProfile) {
-			return userProfile;
-		} else throw new Error('user_not_found');
+		if (userProfile) return userProfile;
+		else throw new Error('user_not_found');
 	}
 
 	deleteUser(id) {
 		const userIndex = this.users.findIndex(i => i.user_id == id);
 
-		if (userIndex > -1) {
-			this.users.splice(userIndex, 1);
-		} else throw new Error('user_not_found');
-
-		return;
+		if (userIndex > -1) return this.users.splice(userIndex, 1);
+		else throw new Error('user_not_found');
 	}
 }
 

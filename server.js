@@ -1,31 +1,27 @@
-const dotenv = require("dotenv");
-const express = require("express");
-const path = require("path");
+const express = require('express');
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
+const routes = require('./routes');
 
-// Routes added in ./routes file
-const router = require("./routes");
+const app = express().use('/', routes);
+const port = process.env.PORT || 3000;
 
-dotenv.load();
-
-const app = express();
-
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
-
-app.use("/", router);
-
-// Catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  const err = new Error("Not Found");
-  err.status = 404;
-  next(err);
+const jwtCheck = jwt({
+		secret: jwks.expressJwtSecret({
+			cache: true,
+			rateLimit: true,
+			jwksRequestsPerMinute: 5,
+			jwksUri: 'https://dev-ivdsn1wz.us.auth0.com/.well-known/jwks.json'
+		}),
+		audience: 'https://rid-auth0-poc.herokuapp.com/auth0/',
+		issuer: 'https://dev-ivdsn1wz.us.auth0.com/',
+		algorithms: ['RS256']
 });
 
-// Error handlers
-app.use(function (err, req, res, next) {
-  res.status(err.status || 500);
+app.use(jwtCheck);
+
+app.get('/authorized', function (req, res) {
+	res.send('Secured Resource');
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Listening on ${process.env.PORT}`);
-});
+app.listen(port);

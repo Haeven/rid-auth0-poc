@@ -1,7 +1,7 @@
+const { v4: uuidv4 } = require('uuid');
 const router = require('express').Router();
 const DatabaseMock = require('./database.mock');
 const Database = new DatabaseMock();
-const { v4: uuidv4 } = require('uuid');
 
 /*
 	------------------------------------------------------
@@ -21,13 +21,13 @@ router.get('/auth0/login', function (req, res, next) {
 	try {
 		const userProfile = Database.loginUser(req.query.userNameOrEmail, req.query.password);
 
-		return res.status(200).json({
+		return res.status(200).send({
 			email: userProfile.email,
 			user_id: userProfile.id,
-			error: false
-		});
+
+		}).end();
 	} catch(e) {
-		return res.status(200).json({ error: e.message });
+		return res.status(200).send({ error: e.message }).end();
 	}
 });
 
@@ -57,9 +57,9 @@ router.get('/auth0/create', function (req, res, next) {
 
 		Database.createUser(user);
 
-		return res.status(200).json({ user, error: false });
+		return res.status(200).send({ user, }).end();
 	} catch(error) {
-		return res.status(200).json({ error });
+		return res.status(200).send({ error }).end();
 	}
 });
 
@@ -68,15 +68,15 @@ router.get('/auth0/create', function (req, res, next) {
 	* @route {GET} /auth0/verify - This endpoint will be called after a user that signed-up follows the "verification" link from their email.
 	* @param {Query String} email
 	* @errorReturns {JSON} - Object containing populated "error" message
-	* @successReturns - {JSON} - Object containing error: false
+	* @successReturns - {JSON} - Empty Object
 */
 router.get('/auth0/verify', function (req, res, next) {
 	try {
 		Database.verifyUser(req.query.email);
 
-		return res.status(200).json({ error: false });
+		return res.status(200).send({ }).end();
 	} catch(error) {
-		return res.status(200).json({ error });
+		return res.status(200).send({ error }).end();
 	}
 });
 
@@ -86,15 +86,15 @@ router.get('/auth0/verify', function (req, res, next) {
 	* @param {Query String} email
 	* @param {Query String} password
 	* @errorReturns {JSON} - Object containing populated "error" message
-	* @successReturns - {JSON} - Object containing error: false
+	* @successReturns - {JSON} - Empty Object
 */
 router.get('/auth0/changePassword', function (req, res, next) {
 	try {
 		Database.changePassword(req.query.email, req.query.password);
 
-		return res.status(200).json({ error: false });
+		return res.status(200).send({ }).end();
 	} catch(error) {
-		return res.status(200).json({ error });
+		return res.status(200).send({ error }).end();
 	}
 });
 
@@ -109,13 +109,12 @@ router.get('/auth0/getUser', function (req, res, next) {
 	try {
 		const userProfile = Database.getUser(req.query.email);
 
-		return res.status(200).json({
+		return res.status(200).send({
 			email: userProfile.email,
-			user_id: userProfile.id,
-			error: false
-		});
+			user_id: userProfile.id
+		}).end();
 	} catch(error) {
-		return res.status(200).json({ error });
+		return res.status(200).send({ error }).end();
 	}
 });
 
@@ -124,15 +123,15 @@ router.get('/auth0/getUser', function (req, res, next) {
 	* @route {GET} /auth0/delete - This endpoint will be called when a user is deleted.
 	* @param {Query String} id
 	* @errorReturns {Error} - Object containing populated "error" message
-	* @successReturns - {JSON} - Object containing error: false
+	* @successReturns - {JSON} - Empty Object
 */
 router.get('/auth0/delete', function (req, res, next) {
 	try {
 		Database.deleteUser(req.query.id);
 
-		return res.status(200).json({ error: false });
+		return res.status(200).send({ }).end();
 	} catch(error) {
-		return res.status(200).json({ error });
+		return res.status(200).send({ error }).end();
 	}
 });
 
