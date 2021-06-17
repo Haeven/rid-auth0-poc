@@ -21,7 +21,7 @@ const jwtCheck = jwt({
 app.use(jwtCheck);
 
 app.get('/authorized', function (req, res) {
-	res.status(500).send('Secured Resource').end();
+	res.send('Secured Resource').end();
 });
 
 app.listen(port);

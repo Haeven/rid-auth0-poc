@@ -5,7 +5,7 @@ const users = [
 		email: 'test@mock.com',
 		id: '3b043439-720b-4ebd-9cac-290015119e9f',
 		password: 'password1',
-		email_verified: false
+		email_verified: true
 	},
 	{
 		email: 'mia@example.com',
