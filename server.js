@@ -1,7 +1,6 @@
 const express = require('express');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
-const http = require('http');
 const logger = require('morgan');
 const path = require('path');
 const router = require('./routes');
@@ -9,8 +8,8 @@ const router = require('./routes');
 const jwtCheck = jwt({
 	secret: jwks.expressJwtSecret({
 		cache: true,
-		rateLimit: true,
-		jwksRequestsPerMinute: 5,
+		rateLimit: false,
+		jwksRequestsPerMinute: 100,
 		jwksUri: 'https://dev-ritchieid.us.auth0.com/.well-known/jwks.json'
 	}),
 	audience: 'https://rid-auth0-poc.herokuapp.com/auth0/',
@@ -43,13 +42,10 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: process.env.NODE_ENV !== 'production' ? err : {}
+    error: err
   });
 });
 
 const port = process.env.PORT || 3000;
 
-http.createServer(app)
-  .listen(port, () => {
-    console.log(`listening on http://localhost:${port}`);
-  });
+app.listen(port);
