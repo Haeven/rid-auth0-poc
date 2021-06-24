@@ -2,7 +2,6 @@ const { v4: uuidv4 } = require('uuid');
 const router = require('express').Router();
 const DatabaseMock = require('./database.mock');
 const Database = new DatabaseMock();
-const { requiresAuth } = require('express-openid-connect');
 
 /*
 	------------------------------------------------------
@@ -21,7 +20,7 @@ router.get('/', function (req, res, next) {
 	next();
 });
 
-router.get('/profile', requiresAuth, function (req, res, next) {
+router.get('/profile', function (req, res, next) {
   res.render('profile', {
     userProfile: JSON.stringify(req.oidc.user, null, 2),
     title: 'Profile page'
