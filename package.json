@@ -3,6 +3,7 @@
   "scripts": {},
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "ejs-locals": "^1.0.2",
     "express": "^4.17.1",
