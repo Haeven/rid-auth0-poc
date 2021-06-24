@@ -2,17 +2,33 @@ const { v4: uuidv4 } = require('uuid');
 const router = require('express').Router();
 const DatabaseMock = require('./database.mock');
 const Database = new DatabaseMock();
+const { requiresAuth } = require('express-openid-connect');
 
 /*
 	------------------------------------------------------
-	UI ROUTES
+	FRONTEND ROUTES
 	------------------------------------------------------
 */
 
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Auth0 Webapp sample Nodejs' });
+	const isAuthenticated = req.oidc.isAuthenticated();
+	const title = (isAuthenticated) ?
+		'You are currently logged in to Demo App using your RitchieID (Auth0/SSO account)'
+		: 'This is an example of a website/webapp integrated with the Ritchie Brothers new login experience using Auth0.'
+
+  res.render('index', { title, isAuthenticated });
+
+	next();
 });
 
+router.get('/profile', requiresAuth, function (req, res, next) {
+  res.render('profile', {
+    userProfile: JSON.stringify(req.oidc.user, null, 2),
+    title: 'Profile page'
+  });
+
+	next();
+});
 
 /*
 	------------------------------------------------------
