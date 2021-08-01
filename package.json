@@ -1,5 +1,5 @@
 {
-  "name": "example-integrating-database-api",
+  "name": "rid-auth0-poc",
   "scripts": {},
   "dependencies": {
     "bcrypt": "^5.0.1",
