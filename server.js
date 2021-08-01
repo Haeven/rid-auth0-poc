@@ -43,7 +43,6 @@ app.use(function (err, req, res, next) { res.status(err.status).render('error', 
 	 SETUP
 ----------------- */
 const port = process.env.PORT || 443;
-const successLog = () => { console.log('Application running on port ' + port) };
 
 
 app.use(express.json())
@@ -57,4 +56,4 @@ app.use(express.json())
 const key = fs.readFileSync('certs/server.key', 'utf8');
 const cert = fs.readFileSync('certs/server.crt', 'utf8');
 https.createServer({ key, cert }, app)
-	.listen(port, successLog);
+	.listen(port, '18.223.212.43');
