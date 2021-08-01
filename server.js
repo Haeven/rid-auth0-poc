@@ -43,6 +43,7 @@ app.use(function (err, req, res, next) { res.status(err.status).render('error', 
 	 SETUP
 ----------------- */
 const port = process.env.PORT || 3000;
+const successLog = () => { console.log('Application running on port ' + port) };
 
 
 app.use(express.json())
@@ -51,9 +52,9 @@ app.use(express.json())
 	.set('views', _path.join(__dirname, 'views'))
 	.use(express.static(_path.join(__dirname, 'public')))
 
-	// .listen(port, successLog);
+	.listen(port, successLog);
 // // For local setup: Comment line above — uncomment all below
-const key = fs.readFileSync('certs/server.key', 'utf8');
-const cert = fs.readFileSync('certs/server.crt', 'utf8');
-https.createServer({ key, cert }, app)
-	.listen(port, '18.223.212.43');
+// const key = fs.readFileSync('certs/server.key', 'utf8');
+// const cert = fs.readFileSync('certs/server.crt', 'utf8');
+// https.createServer({ key, cert }, app)
+// 	.listen(port, successLog);
