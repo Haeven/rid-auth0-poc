@@ -52,9 +52,9 @@ app.use(express.json())
 	.set('views', _path.join(__dirname, 'views'))
 	.use(express.static(_path.join(__dirname, 'public')))
 
-	.listen(port, successLog);
+	// .listen(port, successLog);
 // // For local setup: Comment line above — uncomment all below
-// const key = fs.readFileSync('certs/server.key', 'utf8');
-// const cert = fs.readFileSync('certs/server.crt', 'utf8');
-// https.createServer({ key, cert }, app)
-// 	.listen(port, successLog);
+const key = fs.readFileSync('certs/server.key', 'utf8');
+const cert = fs.readFileSync('certs/server.crt', 'utf8');
+https.createServer({ key, cert }, app)
+	.listen(port, successLog);
