@@ -42,7 +42,7 @@ app.use(function (err, req, res, next) { res.status(err.status).render('error', 
 /* ----------------
 	 SETUP
 ----------------- */
-const port = process.env.PORT || 443;
+const port = process.env.PORT || 3000;
 
 
 app.use(express.json())
