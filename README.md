@@ -6,4 +6,8 @@ Install the dependencies with npm:
 npm install
 ```
 
-Uncode the last lines of server.js and npm run start
+Comment out the last lines of server.js, and follow instructions from the comment above the last lines
+
+```bash
+npm run start
+```
